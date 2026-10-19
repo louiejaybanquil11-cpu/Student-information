@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Information System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin: 15px 0 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-card,
+        .list-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .btn-add {
+            background: #48bb78;
+            color: white;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .btn-edit {
+            background: #ed8936;
+            color: white;
+            padding: 8px 12px;
+            margin-right: 5px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #718096;
+            padding: 20px;
+        }
+
+        .record-count {
+            color: #4a5568;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .notice {
+            margin-top: 12px;
+            color: #4a5568;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .form-card,
+            .list-card {
+                padding: 16px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎓 Student Information System</h1>
+
+    <!-- STUDENT FORM -->
+    <div class="form-card" id="formCard">
+
+        <h2 id="formTitle">Add New Student</h2>
+
+        <form id="studentForm">
+
+            <div class="form-group">
+                <label for="studentId">Student ID</label>
+                <input
+                    type="text"
+                    id="studentId"
+                    placeholder="e.g. 2024-0001"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter full name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="course">Course / Strand</label>
+                <input
+                    type="text"
+                    id="course"
+                    placeholder="e.g. BSIT, STEM, ABM"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="yearLevel">Year Level</label>
+
+                <select id="yearLevel" required>
+                    <option value="">-- Select Year --</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">Grade / Average</label>
+                <input
+                    type="number"
+                    id="grade"
+                    min="65"
+                    max="100"
+                    step="0.25"
+                    placeholder="Enter grade (optional)"
+                >
+            </div>
+
+            <button type="submit" class="btn-add" id="submitBtn">
+                ➕ Add Student
+            </button>
+
+            <button
+                type="button"
+                id="cancelBtn"
+                style="display:none; margin-top:10px; background:#718096; color:white; width:100%;"
+            >
+                Cancel Edit
+            </button>
+
+        </form>
+    </div>
+
+    <!-- STUDENT RECORDS -->
+    <div class="list-card" id="recordsSection">
+
+        <h2>📋 Student Records</h2>
+
+        <p class="record-count" id="recordCount">
+            Total Students: 0
+        </p>
+
+        <div class="table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Full Name</th>
+                        <th>Course / Strand</th>
+                        <th>Year Level</th>
+                        <th>Grade / Average</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentList">
+                    <tr>
+                        <td colspan="6" class="empty-msg">
+                            No student records yet. Add a student above!
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <p class="notice">
+            Student records are saved in this browser.
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+    const studentForm = document.getElementById("studentForm");
+    const studentList = document.getElementById("studentList");
+    const recordCount = document.getElementById("recordCount");
+    const submitBtn = document.getElementById("submitBtn");
+    const formTitle = document.getElementById("formTitle");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    let students = [];
+    let editingId = null;
+
+    // LOAD SAVED RECORDS
+    try {
+        const savedData = localStorage.getItem("studentRecords");
+
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+
+            if (Array.isArray(parsedData)) {
+                students = parsedData;
+            }
+        }
+    } catch (error) {
+        alert("Unable to load saved records.");
+    }
+
+    // SAVE RECORDS
+    function saveStudents() {
+        try {
+            localStorage.setItem(
+                "studentRecords",
+                JSON.stringify(students)
+            );
+            return true;
+        } catch (error) {
+            alert("Unable to save records in this browser.");
+            return false;
+        }
+    }
+
+    // ADD OR UPDATE STUDENT
+    studentForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const id = document.getElementById("studentId").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const course = document.getElementById("course").value.trim();
+        const year = document.getElementById("yearLevel").value;
+        const gradeInput = document.getElementById("grade").value;
+
+        if (!id || !name || !course || !year) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        const grade = gradeInput === "" ? "" : Number(gradeInput);
+
+        if (
+            gradeInput !== "" &&
+            (!Number.isFinite(grade) || grade < 65 || grade > 100)
+        ) {
+            alert("Grade must be between 65 and 100.");
+            return;
+        }
+
+        // CHECK DUPLICATE STUDENT ID
+        const duplicate = students.some(function(student) {
+            return student.id === id && student.id !== editingId;
+        });
+
+        if (duplicate) {
+            alert("Student ID already exists!");
+            return;
+        }
+
+        const student = {
+            id: id,
+            name: name,
+            course: course,
+            year: year,
+            grade: gradeInput === "" ? "N/A" : String(grade)
+        };
+
+        if (editingId !== null) {
+            const index = students.findIndex(function(item) {
+                return item.id === editingId;
+            });
+
+            if (index !== -1) {
+                students[index] = student;
+            }
+
+            editingId = null;
+            alert("Student record updated successfully!");
+        } else {
+            students.push(student);
+            alert("Student added successfully!");
+        }
+
+        saveStudents();
+        displayStudents();
+        resetForm();
+
+        // AUTOMATICALLY SCROLL TO THE BOTTOM RECORDS SECTION
+        setTimeout(function() {
+            document.getElementById("recordsSection").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }, 100);
+    });
+
+    // DISPLAY STUDENT RECORDS
+    function displayStudents() {
+        studentList.innerHTML = "";
+
+        recordCount.textContent = "Total Students: " + students.length;
+
+        if (students.length === 0) {
+            studentList.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-msg">
+                        No student records yet. Add a student above!
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        students.forEach(function(student) {
+            const row = document.createElement("tr");
+
+            // CREATE CELLS SAFELY
+            const values = [
+                student.id,
+                student.name,
+                student.course,
+                student.year,
+                student.grade || "N/A"
+            ];
+
+            values.forEach(function(value) {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            // ACTIONS CELL
+            const actions = document.createElement("td");
+
+            const editBtn = document.createElement("button");
+            editBtn.textContent = "✏️ Edit";
+            editBtn.className = "btn-edit";
+
+            editBtn.addEventListener("click", function() {
+                editStudent(student.id);
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "🗑️ Delete";
+            deleteBtn.className = "btn-delete";
+
+            deleteBtn.addEventListener("click", function() {
+                deleteStudent(student.id);
+            });
+
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+            row.appendChild(actions);
+
+            studentList.appendChild(row);
+        });
+    }
+
+    // EDIT STUDENT
+    function editStudent(id) {
+        const student = students.find(function(item) {
+            return item.id === id;
+        });
+
+        if (!student) {
+            alert("Student not found.");
+            return;
+        }
+
+        editingId = student.id;
+
+        document.getElementById("studentId").value = student.id;
+        document.getElementById("name").value = student.name;
+        document.getElementById("course").value = student.course;
+        document.getElementById("yearLevel").value = student.year;
+        document.getElementById("grade").value =
+            student.grade === "N/A" ? "" : student.grade;
+
+        formTitle.textContent = "Edit Student Information";
+        submitBtn.textContent = "💾 Update Student";
+        cancelBtn.style.display = "block";
+
+        document.getElementById("formCard").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    // DELETE STUDENT
+    function deleteStudent(id) {
+        const student = students.find(function(item) {
+            return item.id === id;
+        });
+
+        if (!student) {
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to delete " + student.name + "?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        students = students.filter(function(item) {
+            return item.id !== id;
+        });
+
+        if (editingId === id) {
+            resetForm();
+        }
+
+        saveStudents();
+        displayStudents();
+
+        alert("Student record deleted successfully!");
+    }
+
+    // RESET FORM
+    function resetForm() {
+        studentForm.reset();
+        editingId = null;
+
+        formTitle.textContent = "Add New Student";
+        submitBtn.textContent = "➕ Add Student";
+        cancelBtn.style.display = "none";
+    }
+
+    // CANCEL EDIT
+    cancelBtn.addEventListener("click", function() {
+        resetForm();
+    });
+
+    // SHOW SAVED RECORDS WHEN PAGE LOADS
+    displayStudents();
+</script>
+
+</body>
+</html>
